@@ -61,13 +61,16 @@ class ViewController: UIViewController {
         return stackView
     }()
     
+    private let itemListKey = "itemListKey"
+    private var itemList = [String]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .brown
         
         setUpView()
-        
+        loadListItem()
         buttonAdd.addTarget(self, action: #selector(addItem), for: .touchUpInside)
     }
     
@@ -125,6 +128,9 @@ class ViewController: UIViewController {
             return
         }
         
+        itemList.append(itemText)
+        saveItemList()
+        
         let itemLabel = UILabel()
         itemLabel.text = itemText
         itemLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
@@ -133,6 +139,25 @@ class ViewController: UIViewController {
         stackView.addArrangedSubview(itemLabel)
         
         inputListItem.text = ""
+    }
+    
+    private func loadListItem(){
+        if let saveItems = UserDefaults.standard.array(forKey: itemListKey) as? [String] {
+            itemList = saveItems
+            
+            for item in itemList {
+                let itemLabel = UILabel()
+                itemLabel.text = item
+                itemLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+                itemLabel.textColor = .white
+                stackView.addArrangedSubview(itemLabel)
+            }
+        }
+    }
+    
+    private func saveItemList(){
+        UserDefaults.standard.set(itemList, forKey: itemListKey)
+        print("lista: \(itemList)")
     }
     
 }
